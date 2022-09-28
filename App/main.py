@@ -60,3 +60,58 @@ def create_app(config={}):
     setup_jwt(app)
     app.app_context().push()
     return app
+
+app = create_app()
+migrate = get_migrate(app)
+
+''' Begin Flask Login Functions '''
+login_manager = LoginManager(app)
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
+''' End Flask Login Functions '''
+
+def authenticate(uname, password):
+  #search for the specified user
+  user = User.query.filter_by(username=uname).first()
+  #if user is found and password matches
+  if user and user.check_password(password):
+    return user
+
+#Payload is a dictionary which is passed to the function by Flask JWT
+def identity(payload):
+  return User.query.get(payload['identity'])
+
+jwt = JWT(app, authenticate, identity)
+
+@app.before_first_request
+def create_tables():
+    db.create_all()
+    db.session.commit()
+
+@app.route('/')
+def index():
+  return render_template('index.html')
+
+
+@app.route('/signup', methods=['GET'])
+def signup():
+  form = SignUp() # create form object
+  return render_template('signUp.html', form=form) # pass form object to template
+
+@app.route('/signup', methods=['POST'])
+def signupAction():
+  form = SignUp() # create form object
+  if form.validate_on_submit():
+    data = request.form # get data from form submission
+    newuser = User(username=data['username']) # create user object
+    newuser.set_password(data['password']) # set password
+    db.session.add(newuser) # save new user
+    db.session.commit()
+    return render_template('index.html')
+  flash('Error invalid input!')
+  return render_template('signUp.html', form = form)
+
+@app.route('/addreview')
+def loseGame():
+  return render_template('addreview.html')
