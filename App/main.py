@@ -6,6 +6,7 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
 from datetime import timedelta
+from forms import SignUp, LogIn
 
 
 from App.database import create_db
@@ -91,7 +92,21 @@ def create_tables():
 
 @app.route('/')
 def index():
-  return render_template('index.html')
+  form = LogIn()
+  return render_template('login.html', form=form)
+
+@app.route('/login', methods=['POST'])
+def loginAction():
+  form = LogIn()
+  if form.validate_on_submit(): 
+      data = request.form
+      user = User.query.filter_by(username = data['username']).first()
+      if user and user.check_password(data['password']): 
+        flash('Logged in successfully.') 
+        login_user(user) 
+        return redirect(url_for('reviews')) 
+  flash('Invalid credentials')
+  return redirect(url_for('index'))
 
 
 @app.route('/signup', methods=['GET'])
