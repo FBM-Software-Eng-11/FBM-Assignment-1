@@ -92,11 +92,6 @@ def create_tables():
     db.create_all()
     db.session.commit()
 
-@app.route('/')
-def index():
-  form = LogIn()
-  return render_template('login.html', form=form)
-
 @app.route('/login', methods=['POST'])
 def loginAction():
   form = LogIn()
