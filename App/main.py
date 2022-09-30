@@ -1,11 +1,15 @@
 import os
-from flask import Flask
-from flask_login import LoginManager, current_user
+from flask import Flask, request, render_template, flash, redirect, url_for, g
+import sys
+import logging
+from flask_jwt import JWT, jwt_required, current_identity
+from flask_login import LoginManager, current_user, login_user, login_required
 from flask_uploads import DOCUMENTS, IMAGES, TEXT, UploadSet, configure_uploads
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
 from datetime import timedelta
+import json
 
 
 from App.database import create_db
