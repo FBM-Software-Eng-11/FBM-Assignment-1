@@ -11,7 +11,7 @@ def get_student(id):
 
 def create_student(firstName, lastName):
     student = Student(firstName=firstName, lastName=lastName)
-     try:
+    try:
         db.session.add(student)
         db.session.commit()
     except IntegrityError:

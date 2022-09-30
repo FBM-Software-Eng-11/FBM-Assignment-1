@@ -11,7 +11,7 @@ def get_review(id, userId):
 
 def create_review(review, studentId, userId):
     review = Review(review = review, studentId = studentId, userId = userId)
-     try:
+    try:
         db.session.add(review)
         db.session.commit()
     except IntegrityError:
