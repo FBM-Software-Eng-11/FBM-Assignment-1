@@ -6,7 +6,6 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
 from datetime import timedelta
-from forms import SignUp, LogIn
 
 
 from App.database import create_db
@@ -63,7 +62,6 @@ def create_app(config={}):
     return app
 
 app = create_app()
-migrate = get_migrate(app)
 
 ''' Begin Flask Login Functions '''
 login_manager = LoginManager(app)

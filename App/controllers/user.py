@@ -7,7 +7,7 @@ def get_all_users():
 
 def create_user(username, password):
     newuser = User(username=username, password=password)
-     try:
+    try:
         db.session.add(newuser)
         db.session.commit()
     except IntegrityError:
