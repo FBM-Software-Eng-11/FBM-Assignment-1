@@ -1,4 +1,5 @@
 from flask import Blueprint, redirect, render_template, request, send_from_directory
+from .forms import SignUp, LogIn
 
 index_views = Blueprint('index_views', __name__, template_folder='../templates')
 
