@@ -13,7 +13,7 @@ class Review(db.Model):
     self.userId = userId
     self.karma = 0
 
-  def toDict(self):
+  def toJSON(self):
       return{
           'id': self.id,
           'student_ID': self.studentId,

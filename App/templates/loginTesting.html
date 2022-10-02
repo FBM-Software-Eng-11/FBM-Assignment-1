@@ -1,0 +1,40 @@
+{% extends "layoutTesting.html" %}
+{% block title %}Login{% endblock %}
+{% block page %}
+    <a href="/" class="center brand-logo">Login</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li> <a href="/signup">Sign Up</a> </li>
+        </ul>
+{% endblock %}
+
+{{ super() }}
+
+{% block content %}
+    <div class="container">
+
+        <div class="row">
+            <form class="col s12 m8 offset-m2" method="POST" action="/auth">
+
+            <div class="row">
+                <div class="input-field col s12 m8 offset-m2">
+                <input id="user_name" type="text" class="validate" name = "username">
+                <label for="user_name">UserName</label>
+                </div>
+
+            <div class="row">
+                <div class="input-field col s12 m8 offset-m2">
+                <input id="password" type="password" class="validate" name = "password">
+                <label for="password">Password</label>
+                </div>
+            </div>
+
+            <button class="btn waves-effect waves-light right blue-grey btn-small" type="submit">Sign in
+            </button>
+
+            </form>
+
+
+        </div>
+    </div>
+  
+{% endblock %}

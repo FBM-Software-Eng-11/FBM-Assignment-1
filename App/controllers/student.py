@@ -9,8 +9,8 @@ def get_student(id):
   student = Student.query.filter_by(id=id).first()
   return student
 
-def create_student(firstName, lastName):
-    student = Student(firstName=firstName, lastName=lastName)
+def create_student(fname, lname):
+    student = Student(firstName = fname, lastName = lname)
     try:
         db.session.add(student)
         db.session.commit()
@@ -25,3 +25,10 @@ def update_student(id,firstName, lastName):
   student.lastName = lastName,
   db.session.add(student)
   db.session.commit()
+
+def get_all_students_json():
+    students = Student.query.all()
+    if not students:
+        return []
+    student = [student.toJSON() for student in students]
+    return student

@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head>
+  
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
+    <!--<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">-->
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{% block title %}{% endblock %}</title>
+
+    <style>
+      body{
+        background-color: #313231;
+        margin: 0;
+        height: 100%;
+      }
+
+    </style>
+
+  </head>
+  <body>
+    <nav class="blue-grey">
+      <div class="nav-wrapper">
+        {% block page %}{% endblock %}
+    </nav>
+    
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <nav class="white black-text" style="padding: 10px">
+      <div class="nav-wrapper">
+          <ul class="flashes">
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+          </ul>
+      </div>
+    </nav>
+    {% endif %}
+    {% endwith %}
+
+    <div class="container" id="content">{% block content %}{% endblock %}</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  </body>
+</html>

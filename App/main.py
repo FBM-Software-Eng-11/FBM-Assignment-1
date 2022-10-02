@@ -22,6 +22,7 @@ from App.views import (
     user_views,
     index_views
 )
+from App.models import *
 
 # New views must be imported and added to this list
 
@@ -49,6 +50,14 @@ def loadConfig(app, config):
     for key, value in config.items():
         app.config[key] = config[key]
 
+        
+''' Begin Flask Login Functions '''
+login_manager = LoginManager()
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
+''' End Flask Login Functions '''
+
 def create_app(config={}):
     app = Flask(__name__, static_url_path='/static')
     CORS(app)
@@ -59,6 +68,7 @@ def create_app(config={}):
     app.config['UPLOADED_PHOTOS_DEST'] = "App/uploads"
     photos = UploadSet('photos', TEXT + DOCUMENTS + IMAGES)
     configure_uploads(app, photos)
+    login_manager.init_app(app)
     add_views(app, views)
     create_db(app)
     setup_jwt(app)
@@ -66,13 +76,6 @@ def create_app(config={}):
     return app
 
 app = create_app()
-
-''' Begin Flask Login Functions '''
-login_manager = LoginManager(app)
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(user_id)
-''' End Flask Login Functions '''
 
 def authenticate(uname, password):
   #search for the specified user
@@ -92,24 +95,6 @@ def create_tables():
     db.create_all()
     db.session.commit()
 
-@app.route('/login', methods=['POST'])
-def loginAction():
-  form = LogIn()
-  if form.validate_on_submit(): 
-      data = request.form
-      user = User.query.filter_by(username = data['username']).first()
-      if user and user.check_password(data['password']): 
-        flash('Logged in successfully.') 
-        login_user(user) 
-        return redirect(url_for('reviews')) 
-  flash('Invalid credentials')
-  return redirect(url_for('index'))
-
-
-@app.route('/signup', methods=['GET'])
-def signup():
-  form = SignUp() # create form object
-  return render_template('signUp.html', form=form) # pass form object to template
 
 @app.route('/signup', methods=['POST'])
 def signupAction():

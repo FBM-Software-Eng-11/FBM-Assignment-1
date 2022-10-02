@@ -5,6 +5,10 @@ from sqlalchemy.exc import IntegrityError
 def get_all_reviews():
     return Review.query.all()
 
+def get_all_test():
+  result = db.session.query(Review,Student).join(Student).all()
+  return result
+
 def get_review(id, userId):
   review = Review.query.filter_by(id=id, userId=userId).first()
   return review
@@ -41,3 +45,10 @@ def delete_review(id, userId):
   review = get_review(id, userId)
   db.session.delete(review)
   db.session.commit()
+
+def get_all_reviews_json():
+    reviews = Review.query.all()
+    if not reviews:
+        return []
+    review = [review.toJSON() for review in reviews]
+    return review
