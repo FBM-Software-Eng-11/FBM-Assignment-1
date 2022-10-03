@@ -7,3 +7,13 @@ index_views = Blueprint('index_views', __name__, template_folder='../templates')
 def index_page():
     form = LogIn()
     return render_template('login.html', form=form)
+
+@index_views.route('/login', methods=['GET'])
+def login_page():
+    form = LogIn()
+    return render_template('login.html', form=form)
+
+@index_views.route('/signup', methods=['GET'])
+def signup_page():
+    form = SignUp()
+    return render_template('signup.html', form=form)
