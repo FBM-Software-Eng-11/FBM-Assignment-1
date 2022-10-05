@@ -127,3 +127,4 @@ def signupAction():
 @app.route('/addreview')
 def loseGame():
   return render_template('addreview.html')
+  
