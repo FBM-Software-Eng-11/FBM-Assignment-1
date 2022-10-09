@@ -54,14 +54,18 @@ def index_page():
 
 @index_views.route('/reviews', methods=['POST'])
 @login_required
-def create_review():
-    data = request.get_json()
-    create_review(review=data['review'],studentId = data['studentId'], userId =current_identity.id)
-    return render_template('reviews.html', form=form)
+def create_review_action():
+    data = request.form
+    result = create_review(review=data['review'],studentId = data['studentId'], userId =current_user.id)
+    reviews = get_all_reviews()
+    if reviews is None:
+        reviews = []
+    form = AddReview()
+    return render_template('reviews.html', reviews=reviews, form=form)
 
 @index_views.route('/reviews', methods=['GET'])
 @login_required
-def get_review():
+def get_reviews():
     reviews = get_all_reviews()
     if reviews is None:
         reviews = []
@@ -70,9 +74,31 @@ def get_review():
 
 @index_views.route('/reviews/<id>', methods=['GET'])
 @login_required
-def get_review_id():
-    reviews = get_review(id, current_identity.id)
-    return render_template('review.html', reviews=reviews)
+def get_review_id(id):
+    reviews = get_review(id = id , userId=current_user.id)
+    return jsonify(reviews)
+    form = AddReview()
+    return render_template('reviews.html', reviews=reviews, form=form)
+  
+@index_views.route('/createStudent',methods=['GET'])
+@login_required
+def create_new_student():
+    students = get_all_students()
+    if students is None:
+        students = []
+    form = AddStudent()
+    return render_template('addstudent.html', form=form, students = students)
+
+@index_views.route('/createStudent',methods=['POST'])
+@login_required
+def create_new_student_action():
+    data = request.form
+    student = create_student(fName = data['firstName'], lName = data['lastName'])
+    students = get_all_students()
+    if students is None:
+        students = []
+    form = AddStudent()
+    return render_template('addstudent.html' , form=form, students = students)
 
 @index_views.route('/reviews/<id>', methods=['PUT'])
 @login_required
@@ -94,21 +120,3 @@ def update_review(id):
 def delete_review_by_id(id):
   delete_review(id, current_identity.id)
   return 'Deleted', 204
-  
-@index_views.route('/createStudent',methods=['GET'])
-@login_required
-def create_new_student():
-    students = get_all_students()
-    if students is None:
-        students = []
-    form = AddStudent()
-    return render_template('addstudent.html', form=form, students = students)
-
-@index_views.route('/createStudent',methods=['POST'])
-@login_required
-def create_new_student_action():
-    data = request.form
-    student = create_student(fName = data['firstName'], lName = data['lastName'])
-    return student
-    
-    return render_template('addstudent.html' , form=form, students = students)

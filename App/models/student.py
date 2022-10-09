@@ -7,8 +7,8 @@ class Student(db.Model):
     review = db.relationship('Review', backref='student',lazy=True,cascade="all, delete-orphan")
 
     def __init__(self,firstName,lastName):
-        self.firstName = firstName,
-        self.lastName = lastName,
+        self.firstName = firstName
+        self.lastName = lastName
 
     def toDict(self):
         return{

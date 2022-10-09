@@ -16,7 +16,6 @@ class LogIn(FlaskForm):
 class AddReview(FlaskForm):
     studentId = StringField('studentId', validators =[InputRequired()])
     review = StringField('review', validators =[InputRequired()])
-    karma = IntegerField('karma', validators =[InputRequired(), NumberRange(min=0, max=10)])
     submit = SubmitField('Add', render_kw={'class': 'btn waves-effect waves-light white-text'})
 
 class AddStudent(FlaskForm):
