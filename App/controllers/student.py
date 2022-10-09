@@ -13,8 +13,8 @@ def get_student_by_name(firstName, lastName):
   student = Student.query.filter_by(firstName=firstName,lastName=lastName).first()
   return student
 
-def create_student(fName, lName):
-    student = Student(firstName=fName, lastName=lName)
+def create_student(id, fName, lName):
+    student = Student(id = id, firstName=fName, lastName=lName)
     try:
         db.session.add(student)
         db.session.commit()
@@ -23,9 +23,10 @@ def create_student(fName, lName):
         return 'fail'
     return 'pass'
 
-def update_student(id,firstName, lastName):
+def update_student(id,fName, lName):
   student = get_student(id)
-  student.firstName = firstName,
-  student.lastName = lastName,
+  student.firstName = fName,
+  student.lastName = lName,
   db.session.add(student)
   db.session.commit()
+  return 'Updated', 201

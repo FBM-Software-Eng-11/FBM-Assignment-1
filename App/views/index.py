@@ -9,11 +9,13 @@ from App.controllers import *
 
 index_views = Blueprint('index_views', __name__, template_folder='../templates')
 
+#Renders the login page
 @index_views.route('/login', methods=['GET'])
 def login_page():
     form = LogIn()
     return render_template('login.html', form=form)
 
+#Logins in the user and redirects
 @index_views.route('/login', methods=['POST'])
 def loginAction():
   form = LogIn()
@@ -28,12 +30,13 @@ def loginAction():
   flash('Invalid credentials')
   return render_template('login.html',form =form)
 
-
+#reders the signup page
 @index_views.route('/signup', methods=['GET'])
 def signup():
   form = SignUp() # create form object
   return render_template('signup.html', form=form) # pass form object to template
 
+#Allows user to sign in and redirects as needed
 @index_views.route('/signup', methods=['POST'])
 def signupAction():
   form = SignUp() # create form object
@@ -47,11 +50,18 @@ def signupAction():
   flash('Error invalid input!')
   return render_template('signup.html', form = form)
 
-@index_views.route('/', methods=['GET'])
-def index_page():
-    form = LogIn()
-    return render_template('login.html', form=form)
+#Renders the main page with the reviews
+@index_views.route('/reviews', methods=['GET'])
+@login_required
+def get_reviews():
+    reviews = get_all_reviews()
+    if reviews is None:
+        reviews = []
+    form = AddReview()
+    students = get_all_students()
+    return render_template('reviews.html', reviews=reviews, form=form, students= students)
 
+#Creates a review and should rerender the page
 @index_views.route('/reviews', methods=['POST'])
 @login_required
 def create_review_action():
@@ -64,24 +74,16 @@ def create_review_action():
     students = get_all_students()
     return render_template('reviews.html', reviews=reviews, form=form, students = students)
 
-@index_views.route('/reviews', methods=['GET'])
-@login_required
-def get_reviews():
-    reviews = get_all_reviews()
-    if reviews is None:
-        reviews = []
-    form = AddReview()
-    students = get_all_students()
-    return render_template('reviews.html', reviews=reviews, form=form, students= students)
-
+#Get a review by an id
 @index_views.route('/reviews/<id>', methods=['GET'])
 @login_required
 def get_review_id(id):
     reviews = get_review(id = id , userId=current_user.id)
-    return jsonify(reviews)
+    return reviews.toDict()
     form = AddReview()
     return render_template('reviews.html', reviews=reviews, form=form)
   
+  #Render the create student page
 @index_views.route('/createStudent',methods=['GET'])
 @login_required
 def create_new_student():
@@ -91,34 +93,33 @@ def create_new_student():
     form = AddStudent()
     return render_template('addstudent.html', form=form, students = students)
 
+#Create student and should rerender the page
 @index_views.route('/createStudent',methods=['POST'])
 @login_required
 def create_new_student_action():
     data = request.form
-    student = create_student(fName = data['firstName'], lName = data['lastName'])
+    student = create_student(id = data['id'], fName = data['firstName'], lName = data['lastName'])
     students = get_all_students()
     if students is None:
         students = []
     form = AddStudent()
     return render_template('addstudent.html' , form=form, students = students)
 
-@index_views.route('/reviews/<id>', methods=['PUT'])
+#Search for student by ID
+@index_views.route('/student/<id>',methods=['GET'])
 @login_required
-def update_review(id):
-  review = get_review(id, current_identity.id)
-  if review == None:
-    return 'Invalid id or unauthorized'
-  data = request.get_json()
-  if 'review' in data: # we can't assume what the user is updating wo we check for the field
-    review.review = data['review']
-  if 'karma' in data:
-    review.karma = data['karma']
-  db.session.add(review)
-  db.session.commit()
-  return 'Updated', 201
+def search_student(id):
+  student = get_student(id)
+  return student.toDict()
 
-@index_views.route('/reviews/<id>', methods=['PUT'])
+#update student
+@index_views.route('/student/<id>',methods=['PUT'])
 @login_required
-def delete_review_by_id(id):
-  delete_review(id, current_identity.id)
-  return 'Deleted', 204
+def update_student_by_id(id):
+  student = get_student(id)
+  if student == None:
+    return 'Student does not exitst'
+  data = request.form
+  update_student(id = data['id'], fName = data['firstName'], lName = data['lastName'])
+
+
