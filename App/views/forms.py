@@ -23,3 +23,4 @@ class AddStudent(FlaskForm):
     id = IntegerField('StudentID', validators =[InputRequired()])
     firstName = StringField('firstName', validators =[InputRequired()])
     lastName = StringField('lastName', validators =[InputRequired()])
+    submit = SubmitField('Add', render_kw={'class': 'btn waves-effect waves-light white-text'})

@@ -35,19 +35,18 @@
       <table>
         <thead>
           <tr>
-            <td>Review</td><td>karma</td><td>Actions</td>
+            <td>ID</td><td>First Name</td><td>Last Name</td>
           </tr>
         </thead>
         <tbody>
-          {% for review in reviews %}
+          {% for student in students %}
             <tr>
-              <td>{{review.review}}</td>
+              <td>{{student.id}}</td>
               <td>
-                {{review.karma}}
+                {{student.firstName}}
               </td>
               <td>
-                <a class="waves-effect waves-light btn" href="/editTodo/{{review.id}}">EDIT</a>
-                <a class="waves-effect waves-light btn" href="/todos/toggle/{{todo.id}}">TOGGLE DONE</a>
+                {{student.lastName}}
               </td>
             </tr>
           {% endfor %}

@@ -1,9 +1,10 @@
-from flask import Blueprint, redirect, render_template, request, send_from_directory, flash
+from flask import Blueprint, redirect, render_template, request, send_from_directory, flash, json, jsonify
 from flask import Flask, request, url_for, g
 from flask_jwt import JWT, jwt_required, current_identity
 from flask_login import LoginManager, current_user, login_user, login_required, login_manager
 from .forms import SignUp, LogIn, AddReview, AddStudent
 from ..controllers.review import *
+from App.controllers import *
 
 
 index_views = Blueprint('index_views', __name__, template_folder='../templates')
@@ -55,8 +56,7 @@ def index_page():
 @login_required
 def create_review():
     data = request.get_json()
-    review = Review(karma=data['karma'], review=data['review'], studentId=data['studentId'], userId=current_identity.id)
-    create_review(review, data['studentId'], current_identity.id)
+    create_review(review=data['review'],studentId = data['studentId'], userId =current_identity.id)
     return render_template('reviews.html', form=form)
 
 @index_views.route('/reviews', methods=['GET'])
@@ -98,12 +98,17 @@ def delete_review_by_id(id):
 @index_views.route('/createStudent',methods=['GET'])
 @login_required
 def create_new_student():
+    students = get_all_students()
+    if students is None:
+        students = []
     form = AddStudent()
-    return render_template('addstudent.html', form=form)
+    return render_template('addstudent.html', form=form, students = students)
 
 @index_views.route('/createStudent',methods=['POST'])
 @login_required
 def create_new_student_action():
-    data = request.get_json()
-    create_student(id = data['id'], firstName= data['firstName'], lastName= data['lastName'])
-    render_template('reviews.html')
+    data = request.form
+    student = create_student(fName = data['firstName'], lName = data['lastName'])
+    return student
+    
+    return render_template('addstudent.html' , form=form, students = students)
