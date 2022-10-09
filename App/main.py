@@ -11,7 +11,7 @@ from werkzeug.datastructures import  FileStorage
 from datetime import timedelta
 import json
 
-
+from .models import db , User, Student, Review
 from App.database import create_db
 
 from App.controllers import (
@@ -49,6 +49,13 @@ def loadConfig(app, config):
     for key, value in config.items():
         app.config[key] = config[key]
 
+''' Begin Flask Login Functions '''
+login_manager = LoginManager()
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
+''' End Flask Login Functions '''
+
 def create_app(config={}):
     app = Flask(__name__, static_url_path='/static')
     CORS(app)
@@ -60,19 +67,13 @@ def create_app(config={}):
     photos = UploadSet('photos', TEXT + DOCUMENTS + IMAGES)
     configure_uploads(app, photos)
     add_views(app, views)
+    login_manager.init_app(app)
     create_db(app)
     setup_jwt(app)
     app.app_context().push()
     return app
 
 app = create_app()
-
-''' Begin Flask Login Functions '''
-login_manager = LoginManager(app)
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(user_id)
-''' End Flask Login Functions '''
 
 def authenticate(uname, password):
   #search for the specified user
@@ -91,40 +92,3 @@ jwt = JWT(app, authenticate, identity)
 def create_tables():
     db.create_all()
     db.session.commit()
-
-@app.route('/login', methods=['POST'])
-def loginAction():
-  form = LogIn()
-  if form.validate_on_submit(): 
-      data = request.form
-      user = User.query.filter_by(username = data['username']).first()
-      if user and user.check_password(data['password']): 
-        flash('Logged in successfully.') 
-        login_user(user) 
-        return redirect(url_for('reviews')) 
-  flash('Invalid credentials')
-  return redirect(url_for('index'))
-
-
-@app.route('/signup', methods=['GET'])
-def signup():
-  form = SignUp() # create form object
-  return render_template('signUp.html', form=form) # pass form object to template
-
-@app.route('/signup', methods=['POST'])
-def signupAction():
-  form = SignUp() # create form object
-  if form.validate_on_submit():
-    data = request.form # get data from form submission
-    newuser = User(username=data['username']) # create user object
-    newuser.set_password(data['password']) # set password
-    db.session.add(newuser) # save new user
-    db.session.commit()
-    return render_template('index.html')
-  flash('Error invalid input!')
-  return render_template('signUp.html', form = form)
-
-@app.route('/addreview')
-def loseGame():
-  return render_template('addreview.html')
-  

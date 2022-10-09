@@ -6,7 +6,8 @@ class Student(db.Model):
     lastName = db.Column(db.String(120), nullable=False)
     review = db.relationship('Review', backref='student',lazy=True,cascade="all, delete-orphan")
 
-    def __init__(self, firstName,lastName):
+    def __init__(self,id, firstName,lastName):
+        self,id = id,
         self.firstName = firstName,
         self.lastName = lastName,
 

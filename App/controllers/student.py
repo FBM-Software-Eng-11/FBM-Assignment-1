@@ -9,8 +9,12 @@ def get_student(id):
   student = Student.query.filter_by(id=id).first()
   return student
 
-def create_student(firstName, lastName):
-    student = Student(firstName=firstName, lastName=lastName)
+def get_student_by_name(firstName, lastName):
+  student = Student.query.filter_by(firstName=firstName,lastName=lastName).first()
+  return student
+
+def create_student(id, firstName, lastName):
+    student = Student(id=id, firstName=firstName, lastName=lastName)
     try:
         db.session.add(student)
         db.session.commit()

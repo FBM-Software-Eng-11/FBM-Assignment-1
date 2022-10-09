@@ -8,9 +8,8 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(120), nullable=False)
     review = db.relationship('Review', backref='user', lazy=True,cascade="all, delete-orphan" )
 
-    def __init__(self, username, password):
+    def __init__(self, username):
         self.username = username
-        self.set_password(password)
 
     def toJSON(self):
         return{

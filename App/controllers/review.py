@@ -31,12 +31,6 @@ def downvote_review(id):
   db.session.add(review)
   db.session.commit()
 
-def update_review(id, review, userId):
-  new_review = get_review(id, userId)
-  new_review.review = review,
-  db.session.add(new_review)
-  db.session.commit()
-
 def delete_review(id, userId):
   review = get_review(id, userId)
   db.session.delete(review)
