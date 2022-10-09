@@ -122,4 +122,16 @@ def update_student_by_id(id):
   data = request.form
   update_student(id = data['id'], fName = data['firstName'], lName = data['lastName'])
 
+@index_views.route('/upvote/<id>')
+@login_required
+def upvote(id):
+    result = upvote_review(id)
+    return 'pass'
+
+@index_views.route('/downvote/<id>')
+@login_required
+def downvote(id):
+    result = downvote_review(id)
+    return 'pass'
+
 
