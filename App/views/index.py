@@ -23,7 +23,7 @@ def loginAction():
       user = User.query.filter_by(username = data['username']).first()
       if user and user.check_password(data['password']): # check credentials
         flash('Logged in successfully.') # send message to next page
-        login_user(user) # login the user
+        login_user(user,True) # login the user
         return render_template('reviews.html', form=review_form) # redirect to main page if login successful
   flash('Invalid credentials')
   return render_template('login.html',form =form)
@@ -61,7 +61,8 @@ def create_review_action():
     if reviews is None:
         reviews = []
     form = AddReview()
-    return render_template('reviews.html', reviews=reviews, form=form)
+    students = get_all_students()
+    return render_template('reviews.html', reviews=reviews, form=form, students = students)
 
 @index_views.route('/reviews', methods=['GET'])
 @login_required
@@ -70,7 +71,8 @@ def get_reviews():
     if reviews is None:
         reviews = []
     form = AddReview()
-    return render_template('reviews.html', reviews=reviews, form=form)
+    students = get_all_students()
+    return render_template('reviews.html', reviews=reviews, form=form, students= students)
 
 @index_views.route('/reviews/<id>', methods=['GET'])
 @login_required
