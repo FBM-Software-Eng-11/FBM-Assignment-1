@@ -9,6 +9,10 @@ from App.controllers import *
 
 index_views = Blueprint('index_views', __name__, template_folder='../templates')
 
+@index_views.route('/')
+def home():
+  return 'hello'
+
 #Logins in the user and redirects
 @index_views.route('/login', methods=['POST'])
 def loginAction():
