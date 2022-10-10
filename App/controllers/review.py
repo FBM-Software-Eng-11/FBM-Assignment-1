@@ -30,8 +30,3 @@ def downvote_review(id):
   review.karma -= 1
   db.session.add(review)
   db.session.commit()
-
-def delete_review(id, userId):
-  review = get_review(id, userId)
-  db.session.delete(review)
-  db.session.commit()
