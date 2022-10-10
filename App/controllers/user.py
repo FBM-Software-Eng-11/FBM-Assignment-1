@@ -7,13 +7,9 @@ def get_all_users():
 
 def create_user(username, password):
     newuser = User(username=username, password=password)
-    try:
-        db.session.add(newuser)
-        db.session.commit()
-    except IntegrityError:
-        db.session.rollback()
-        return 'fail'
-    return 'pass'
+    db.session.add(newuser)
+    db.session.commit()
+    return newuser
 
 def get_all_users_json():
     users = User.query.all()

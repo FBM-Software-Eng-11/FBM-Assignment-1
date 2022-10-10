@@ -25,8 +25,8 @@ def create_student(id, fName, lName):
 
 def update_student(id,fName, lName):
   student = get_student(id)
-  student.firstName = fName,
-  student.lastName = lName,
+  student.firstName = fName
+  student.lastName = lName
   db.session.add(student)
   db.session.commit()
   return 'Updated', 201

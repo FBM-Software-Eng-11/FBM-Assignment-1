@@ -5,8 +5,8 @@ from sqlalchemy.exc import IntegrityError
 def get_all_reviews():
     return Review.query.all()
 
-def get_review(id, userId):
-  review = Review.query.filter_by(id=id, userId=userId).first()
+def get_review(userId):
+  review = Review.query.filter_by(userId=userId).all()
   return review
 
 def create_review(review, studentId, userId):
