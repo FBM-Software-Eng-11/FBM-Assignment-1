@@ -2,7 +2,6 @@ from flask import Blueprint, redirect, render_template, request, send_from_direc
 from flask import Flask, request, url_for, g
 from flask_jwt import JWT, jwt_required, current_identity
 from flask_login import LoginManager, current_user, login_user, login_required, login_manager
-from .forms import SignUp, LogIn, AddReview, AddStudent
 from ..controllers.review import *
 from App.controllers import *
 
@@ -11,7 +10,7 @@ index_views = Blueprint('index_views', __name__, template_folder='../templates')
 
 @index_views.route('/')
 def home():
-  return 'hello'
+  return render_template('index.html')
 
 #Logins in the user and redirects
 @index_views.route('/login', methods=['POST'])
