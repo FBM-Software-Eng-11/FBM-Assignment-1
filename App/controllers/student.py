@@ -9,10 +9,6 @@ def get_student(id):
   student = Student.query.filter_by(id=id).first()
   return student
 
-def get_student_by_name(firstName, lastName):
-  student = Student.query.filter_by(firstName=firstName,lastName=lastName).first()
-  return student
-
 def create_student(id, fName, lName):
     student = Student(id = id, firstName=fName, lastName=lName)
     try:
