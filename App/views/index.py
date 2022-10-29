@@ -52,11 +52,11 @@ def create_review_action():
     data = request.get_json()
     student = get_student(data['studentId'])
     if student is None:
-      return "Student not found"
+      return "Student not found", 400
     result = create_review(review=data['review'],studentId = data['studentId'], userId =current_user.id)
     if result == "pass":
       return 'Review created', 201
-    return 'Failed to create review', 400
+
 
 #Get a review by an id
 @index_views.route('/reviews/<UserId>', methods=['GET'])
@@ -82,6 +82,8 @@ def create_new_student_action():
 @login_required
 def search_student(studentId):
   student = get_student(studentId)
+  if student is None:
+    return "Student does not exist", 400
   return student.toDict(), 200
 
 #update student
