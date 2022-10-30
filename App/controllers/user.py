@@ -6,7 +6,8 @@ def get_all_users():
     return User.query.all()
 
 def create_user(username, password):
-    newuser = User(username=username, password=password)
+    newuser = User(username=username)
+    newuser.set_password(password)
     db.session.add(newuser)
     db.session.commit()
     return newuser
