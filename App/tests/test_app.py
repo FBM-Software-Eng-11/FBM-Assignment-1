@@ -6,7 +6,7 @@ from App.database import create_db
 from App.models import User
 from App.controllers import *
 
-from wsgi import app
+from App.main import app
 
 
 LOGGER = logging.getLogger(__name__)
